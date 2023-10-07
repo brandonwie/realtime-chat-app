@@ -58,7 +58,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     redirect: function () {
-      return '/dashboard';
+      return 'http://localhost:3000/dashboard';
     },
   },
 };

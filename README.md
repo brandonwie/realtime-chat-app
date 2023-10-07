@@ -1,6 +1,6 @@
 # Realtime Chat App
 
-> Build and Deploy a Full Stack Realtime Chat Messaging App with NextJS 13 with the help of [JavaScript Mastery](https://www.youtube.com/watch?v=NlXfg5Pxxh8&ab_channel=Joshtriedcoding)
+> Build and Deploy a Full Stack Realtime Chat Messaging App with NextJS 13 with the help of [Build and Deploy a Full Stack Realtime Chat Messaging App with NextJS 13](https://www.youtube.com/watch?v=NlXfg5Pxxh8&ab_channel=Joshtriedcoding)
 
 ## Boilerplate
 
@@ -18,3 +18,9 @@ npx create-next-app@latest
 - [Lucide (icons)](https://github.com/lucide-icons/lucide)
 - [next-auth](https://github.com/nextauthjs/next-auth)
 - [Upstash Redis](https://github.com/upstash/upstash-redis)
+- [react-hot-toast](https://www.npmjs.com/package/react-hot-toast)
+- [@tailwindcss/forms](https://github.com/tailwindlabs/tailwindcss-forms)
+- [react-hook-form](https://github.com/react-hook-form/react-hook-form)
+- [@hookform/resolvers](https://github.com/react-hook-form/resolvers)
+- [zod](https://github.com/colinhacks/zod)
+- [axios](https://github.com/axios/axios)
