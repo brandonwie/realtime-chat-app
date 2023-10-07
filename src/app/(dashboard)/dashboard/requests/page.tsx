@@ -14,7 +14,7 @@ const Requests: FC<pagesProps> = async ({}) => {
   // ids of people who sent current logged in user a friend request
   const incomingSenderIds = (await fetchRedis(
     'smembers',
-    `user:${session.user.id}:incoming_friend_requests`
+    `user:${session.user.id}:incoming_friend_requests`,
   )) as string[];
 
   const incomingFriendRequests = await Promise.all(
@@ -26,13 +26,13 @@ const Requests: FC<pagesProps> = async ({}) => {
         senderId,
         senderEmail: parsedSender.email,
       };
-    })
+    }),
   );
 
   return (
-    <main className='pt-8'>
-      <h1 className='font-bold text-5xl mb-8'>Add a friend</h1>
-      <div className='flex flex-col gap-4'>
+    <main className="pt-8">
+      <h1 className="font-bold text-5xl mb-8">Add a friend</h1>
+      <div className="flex flex-col gap-4">
         <FriendRequests
           incomingFriendRequests={incomingFriendRequests}
           sessionId={session.user.id}
