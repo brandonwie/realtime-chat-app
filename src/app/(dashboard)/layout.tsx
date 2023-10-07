@@ -31,7 +31,7 @@ const sidebarOptions: SidebarOption[] = [
 
 const Layout: FC<layoutProps> = async ({ children }) => {
   const session = await getServerSession(authOptions);
-  console.log(session);
+  console.log({ session });
   if (!session) notFound();
 
   const unseenRequestCount = (

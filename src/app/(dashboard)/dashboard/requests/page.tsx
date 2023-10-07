@@ -1,3 +1,4 @@
+import FriendRequests from '@/components/FriendRequests';
 import { fetchRedis } from '@/helpers/redis';
 import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
@@ -18,15 +19,27 @@ const Requests: FC<pagesProps> = async ({}) => {
 
   const incomingFriendRequests = await Promise.all(
     incomingSenderIds.map(async function (senderId) {
-      const sender = (await fetchRedis('get', `user:${senderId}`)) as User;
+      const sender = await fetchRedis('get', `user:${senderId}`);
+      const parsedSender = JSON.parse(sender) as User;
+
       return {
         senderId,
-        senderEmail: sender.email,
+        senderEmail: parsedSender.email,
       };
     })
   );
 
-  return <div>Requests</div>;
+  return (
+    <main className='pt-8'>
+      <h1 className='font-bold text-5xl mb-8'>Add a friend</h1>
+      <div className='flex flex-col gap-4'>
+        <FriendRequests
+          incomingFriendRequests={incomingFriendRequests}
+          sessionId={session.user.id}
+        />
+      </div>
+    </main>
+  );
 };
 
 export default Requests;

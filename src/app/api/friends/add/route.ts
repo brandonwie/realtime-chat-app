@@ -2,6 +2,7 @@ import { fetchRedis } from '@/helpers/redis';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { emailValidator } from '@/lib/validations';
+import { AxiosError } from 'axios';
 import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 
@@ -22,7 +23,6 @@ export async function POST(req: Request, res: Response) {
     );
 
     const data = (await RESTResponse.json()) as { result: string };
-    console.log({ RESTResponse: data });
     const idToAdd = data.result;
 
     if (!idToAdd) {
@@ -30,8 +30,6 @@ export async function POST(req: Request, res: Response) {
     }
 
     const session = await getServerSession(authOptions);
-
-    console.log({ session });
 
     if (!session) {
       return new Response('Unauthorized', { status: 401 });
@@ -49,7 +47,6 @@ export async function POST(req: Request, res: Response) {
       `user:${idToAdd}:incoming_friend_requests`,
       session.user.id
     )) as 0 | 1;
-    console.log({ isAlreadyAdded });
 
     if (isAlreadyAdded) {
       return new Response('Friend request already sent', { status: 400 });
@@ -61,7 +58,6 @@ export async function POST(req: Request, res: Response) {
       `user:${session.user.id}:friends`,
       idToAdd
     )) as 0 | 1;
-    console.log({ isAlreadyFriends });
 
     if (isAlreadyFriends) {
       return new Response('You two are already friends', { status: 400 });
@@ -76,6 +72,10 @@ export async function POST(req: Request, res: Response) {
       return new Response('Invalid request payload', { status: 422 });
     }
 
-    return new Response('Invalid request', { status: 400 });
+    if (error instanceof AxiosError) {
+      return new Response(error.message, { status: error.status });
+    }
+
+    return new Response('Unknown Error', { status: 500 });
   }
 }
