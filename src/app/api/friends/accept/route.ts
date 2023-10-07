@@ -25,7 +25,7 @@ export async function POST(req: Request, res: Response) {
     const isAlreadyMyFriend = await fetchRedis(
       'sismember',
       `user:${session.user.id}:friends`,
-      idToAccept
+      idToAccept,
     );
 
     if (isAlreadyMyFriend) {
@@ -36,7 +36,7 @@ export async function POST(req: Request, res: Response) {
     const hasTargetSentFriendRequest = await fetchRedis(
       'sismember',
       `user:${session.user.id}:incoming_friend_requests`,
-      idToAccept
+      idToAccept,
     );
 
     if (!hasTargetSentFriendRequest) {
@@ -55,7 +55,7 @@ export async function POST(req: Request, res: Response) {
     // remove the friend request
     await db.srem(
       `user:${session.user.id}:incoming_friend_requests`,
-      idToAccept
+      idToAccept,
     );
 
     return new Response('OK', { status: 200 });
@@ -64,7 +64,9 @@ export async function POST(req: Request, res: Response) {
       return new Response('Invalid request payload', { status: 422 });
     }
     if (error instanceof AxiosError) {
-      return new Response(error.message, { status: error.status });
+      return new Response(error.message, {
+        status: error.status,
+      });
     }
 
     return new Response('Unknown error', { status: 500 });
