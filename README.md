@@ -16,3 +16,5 @@ npx create-next-app@latest
 - [tailwind-merge](https://github.com/compi-ui/tw-merge)
 - [clsx](https://github.com/lukeed/clsx)
 - [Lucide (icons)](https://github.com/lucide-icons/lucide)
+- [next-auth](https://github.com/nextauthjs/next-auth)
+- [Upstash Redis](https://github.com/upstash/upstash-redis)
