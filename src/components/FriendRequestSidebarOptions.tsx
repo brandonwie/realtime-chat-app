@@ -36,16 +36,14 @@ const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
 
   useEffect(() => {
     const friendHandler = () => {
-      // TODO improve to update using subscription
-      router.refresh();
+      setUnseenRequestCount((prev) => prev - 1);
     };
 
-    pusherClient
-      .subscribe(toPusherKey(`user${sessionId}:friends`))
-      .bind('new_friend', friendHandler);
+    pusherClient.subscribe(toPusherKey(`user:${sessionId}:friends`));
+    pusherClient.bind('new_friend', friendHandler);
 
     return () => {
-      pusherClient.unsubscribe(toPusherKey(`user${sessionId}:friends`));
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:friends`));
       pusherClient.unbind('new_friend', friendHandler);
     };
   }, [router, sessionId]);

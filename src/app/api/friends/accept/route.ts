@@ -11,7 +11,7 @@ export async function POST(req: Request, res: Response) {
   try {
     const body = await req.json();
 
-    const { id: idToAccept } = z
+    const { id: idToAdd } = z
       .object({
         id: z.string(),
       })
@@ -27,7 +27,7 @@ export async function POST(req: Request, res: Response) {
     const isAlreadyMyFriend = await fetchRedis(
       'sismember',
       `user:${session.user.id}:friends`,
-      idToAccept,
+      idToAdd,
     );
 
     if (isAlreadyMyFriend) {
@@ -38,35 +38,43 @@ export async function POST(req: Request, res: Response) {
     const hasTargetSentFriendRequest = await fetchRedis(
       'sismember',
       `user:${session.user.id}:incoming_friend_requests`,
-      idToAccept,
+      idToAdd,
     );
 
     if (!hasTargetSentFriendRequest) {
       return new Response('No friend request found', { status: 400 });
     }
 
+    const [userRaw, friendRaw] = (await Promise.all([
+      fetchRedis('get', `user:${session.user.id}`),
+      fetchRedis('get', `user:${idToAdd}`),
+    ])) as [string, string];
+    const user = JSON.parse(userRaw) as User;
+    const friend = JSON.parse(friendRaw) as User;
+
     // NOTE notify added user
-    pusherServer.trigger(
-      toPusherKey(`user:${idToAccept}:friend`),
-      'new_friend',
-      {},
-    );
+    await Promise.all([
+      pusherServer.trigger(
+        toPusherKey(`user:${idToAdd}:friends`),
+        'new_friend',
+        user,
+      ),
+      pusherServer.trigger(
+        toPusherKey(`user:${session.user.id}:friends`),
+        'new_friend',
+        friend,
+      ),
+      // add the friend who requested to the my friends list
+      await db.sadd(`user:${session.user.id}:friends`, idToAdd),
+      // vice-versa
+      await db.sadd(`user:${idToAdd}:friends`, session.user.id),
 
-    // add the friend who requested to the my friends list
-    await db.sadd(`user:${session.user.id}:friends`, idToAccept);
-    // vice-versa
-    await db.sadd(`user:${idToAccept}:friends`, session.user.id);
-
-    // await db.srem(
-    //   `user:${idToAccept}:outbound_friend_requests`,
-    //   session.user.id
-    // );
-
-    // remove the friend request
-    await db.srem(
-      `user:${session.user.id}:incoming_friend_requests`,
-      idToAccept,
-    );
+      // remove the friend request
+      await db.srem(
+        `user:${session.user.id}:incoming_friend_requests`,
+        idToAdd,
+      ),
+    ]);
 
     return new Response('OK', { status: 200 });
   } catch (error) {

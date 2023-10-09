@@ -12,7 +12,7 @@ import FriendRequestSidebarOptions from './FriendRequestSidebarOptions';
 import { Session } from 'next-auth';
 import { SidebarOption } from '@/types/typings';
 import { usePathname } from 'next/navigation';
-import SidebarChatList from './SidebarChatLists';
+import SidebarChatList from './SidebarChatList';
 
 interface MobileChatLayoutProps {
   friends: User[];
