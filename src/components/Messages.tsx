@@ -29,7 +29,6 @@ const Messages: FC<MessagesProps> = ({
   useSubscribeMessageRequest({
     chatId: chatId,
     callback: (message) => {
-      console.log({ message });
       setMessages((prev) => [message, ...prev]);
     },
   });

@@ -1,16 +1,66 @@
 'use client';
-import { chatHrefConstructor } from '@/lib/utils';
+import { pusherClient } from '@/lib/pusher';
+import { chatHrefConstructor, toPusherKey } from '@/lib/utils';
 import { usePathname, useRouter } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import UnseenChatToast from './UnseenChatToast';
 
 interface SidebarChatListProps {
   friends: User[];
   sessionId: string;
 }
+interface ExtendedMessage extends Message {
+  senderImg: string;
+  senderName: string;
+}
 
 const SidebarChatList: FC<SidebarChatListProps> = ({ friends, sessionId }) => {
+  const router = useRouter();
   const pathname = usePathname();
   const [unseenMessages, setUnseenMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    const chatHander = (message: ExtendedMessage) => {
+      // NOTE if user isn't in chat page, notify
+      const shouldNotify =
+        pathname !==
+        `/dashboard/chat${chatHrefConstructor(sessionId, message.senderId)}`;
+      if (!shouldNotify) return;
+
+      // notify
+      toast.custom((t) => (
+        <UnseenChatToast
+          t={t}
+          sessionId={sessionId}
+          senderId={message.senderId}
+          senderImg={message.senderImg}
+          senderMessage={message.text}
+          senderName={message.senderName}
+        />
+      ));
+
+      setUnseenMessages((prev) => [...prev, message]);
+    };
+    const friendHandler = () => {
+      // TODO improve to update using subscription
+      router.refresh();
+    };
+
+    pusherClient
+      .subscribe(toPusherKey(`user:${sessionId}:chats`))
+      .bind('new_message', chatHander);
+    pusherClient
+      .subscribe(toPusherKey(`user${sessionId}:friends`))
+      .bind('new_friend', friendHandler);
+
+    return () => {
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:chats`));
+      pusherClient.unbind('new_message', chatHander);
+      pusherClient.unsubscribe(toPusherKey(`user${sessionId}:friends`));
+      pusherClient.unbind('new_friend', friendHandler);
+    };
+  }, [pathname, sessionId, router]);
 
   useEffect(() => {
     if (pathname?.includes('chat')) {

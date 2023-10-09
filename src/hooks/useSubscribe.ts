@@ -22,8 +22,7 @@ export async function useSubscribeFriendRequest({
       );
       pusherClient.unbind('incoming_friend_requests', callback);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [sessionId, callback]);
 }
 
 export async function useSubscribeMessageRequest({
@@ -42,6 +41,5 @@ export async function useSubscribeMessageRequest({
       pusherClient.unsubscribe(toPusherKey(`chat:${chatId}`));
       pusherClient.unbind('incoming_message', callback);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [chatId, callback]);
 }
