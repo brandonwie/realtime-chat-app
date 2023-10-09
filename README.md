@@ -5,6 +5,7 @@
 ## Features
 
 ![Google Login]()
+![Home](public/main.png)
 ![Add Friend](public/add-friend.gif)
 ![ChatNotification](public/chat-notification.gif)
 ![Chat](public/chat.gif)

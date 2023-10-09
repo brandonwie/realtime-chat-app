@@ -3,7 +3,7 @@ import { VariantProps, cva } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
 import { FC } from 'react';
 
-const buttonVariants = cva(
+export const buttonVariants = cva(
   [
     'active:scale-95',
     'inline-flex',
@@ -36,7 +36,7 @@ const buttonVariants = cva(
       variant: 'primary',
       size: 'md',
     },
-  }
+  },
 );
 type ButtonVariantProps = VariantProps<typeof buttonVariants>;
 export interface ButtonProps
@@ -59,7 +59,7 @@ const Button: FC<ButtonProps> = ({
       disabled={isLoading}
       {...props}
     >
-      {isLoading ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : null}
+      {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
       {children}
     </button>
   );
