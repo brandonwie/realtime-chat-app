@@ -33,12 +33,14 @@ async function getChatMessages(chatId: string) {
 const Chat: FC<ChatProps> = async ({ params }) => {
   const { chatId } = params;
   const session = await getServerSession(authOptions);
+  console.log({ session });
   if (!session) notFound();
 
   const { user } = session;
 
   // acccess chatId
   const [userId1, userId2] = chatId.split('--');
+  console.log({ userId1, userId2 });
 
   if (user.id !== userId1 || user.id !== userId2) notFound();
 

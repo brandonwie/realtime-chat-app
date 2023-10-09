@@ -12,7 +12,7 @@ const SignOutButton: FC<SignOutButtonProps> = (props) => {
   return (
     <Button
       {...props}
-      variant='ghost'
+      variant="ghost"
       onClick={async () => {
         setIsSigningOut(true);
         try {
@@ -25,9 +25,9 @@ const SignOutButton: FC<SignOutButtonProps> = (props) => {
       }}
     >
       {isSigningOut ? (
-        <Loader2 className='animate-spin h-4 w-4' />
+        <Loader2 className="animate-spin h-4 w-4" />
       ) : (
-        <LogOut className='w-4 h-4' />
+        <LogOut className="w-4 h-4" />
       )}
     </Button>
   );
