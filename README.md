@@ -2,6 +2,13 @@
 
 > Build and Deploy a Full Stack Realtime Chat Messaging App with NextJS 13 with the help of [Build and Deploy a Full Stack Realtime Chat Messaging App with NextJS 13](https://www.youtube.com/watch?v=NlXfg5Pxxh8&ab_channel=Joshtriedcoding)
 
+## Features
+
+![Google Login]()
+![Add Friend](public/add-friend.gif)
+![ChatNotification](public/chat-notification.gif)
+![Chat](public/chat.gif)
+
 ## Boilerplate
 
 ```bash

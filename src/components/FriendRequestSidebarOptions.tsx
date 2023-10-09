@@ -1,8 +1,11 @@
 'use client';
 
 import { useSubscribeFriendRequest } from '@/hooks/useSubscribe';
+import { pusherClient } from '@/lib/pusher';
+import { toPusherKey } from '@/lib/utils';
 import { User } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -15,6 +18,7 @@ const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
   sessionId,
   initialUnseenRequestCount,
 }) => {
+  const router = useRouter();
   const [unseenRequestCount, setUnseenRequestCount] = useState<number>(
     initialUnseenRequestCount,
   );
@@ -29,6 +33,22 @@ const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
       });
     },
   });
+
+  useEffect(() => {
+    const friendHandler = () => {
+      // TODO improve to update using subscription
+      router.refresh();
+    };
+
+    pusherClient
+      .subscribe(toPusherKey(`user${sessionId}:friends`))
+      .bind('new_friend', friendHandler);
+
+    return () => {
+      pusherClient.unsubscribe(toPusherKey(`user${sessionId}:friends`));
+      pusherClient.unbind('new_friend', friendHandler);
+    };
+  }, [router, sessionId]);
 
   return (
     <Link

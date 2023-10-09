@@ -5,12 +5,12 @@ import SignOutButton from '@/components/SignOutButton';
 import { getFriendsByUserId } from '@/helpers/get-friends-by-user-id';
 import { fetchRedis } from '@/helpers/redis';
 import { authOptions } from '@/lib/auth';
+
 import { getServerSession } from 'next-auth';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FC, ReactNode } from 'react';
-
 interface layoutProps {
   children: ReactNode;
 }
