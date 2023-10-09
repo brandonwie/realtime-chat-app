@@ -50,7 +50,6 @@ const Chat: FC<ChatProps> = async ({ params }) => {
   const chatPartnerId = user.id === userId1 ? userId2 : userId1;
   const chatPartner = (await db.get(`user:${chatPartnerId}`)) as User;
   const initialMessages = await getChatMessages(chatId);
-  console.log(initialMessages);
 
   return (
     <div className="flex-1 justify-between flex flex-col h-full max-h-[calc(100vh-6rem)]">
@@ -82,6 +81,7 @@ const Chat: FC<ChatProps> = async ({ params }) => {
       </div>
       {/* chat */}
       <Messages
+        chatId={chatId}
         initialMessages={initialMessages}
         sessionId={session.user.id}
         sessionImg={session.user.image}

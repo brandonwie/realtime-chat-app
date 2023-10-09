@@ -1,8 +1,10 @@
 'use client';
 
+import { useSubscribeFriendRequest } from '@/hooks/useSubscribe';
 import { User } from 'lucide-react';
 import Link from 'next/link';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 interface FriendRequestSidebarOptionsProps {
   sessionId: string;
@@ -16,6 +18,18 @@ const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
   const [unseenRequestCount, setUnseenRequestCount] = useState<number>(
     initialUnseenRequestCount,
   );
+
+  useSubscribeFriendRequest({
+    sessionId: sessionId,
+    callback: ({ senderEmail }) => {
+      setUnseenRequestCount((prev) => prev + 1);
+
+      toast(`New friend request from "${senderEmail}"`, {
+        icon: '💌',
+      });
+    },
+  });
+
   return (
     <Link
       href="/dashboard/requests"

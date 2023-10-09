@@ -4,8 +4,10 @@ import { Message } from '@/lib/validations';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import Image from 'next/image';
+import { useSubscribeMessageRequest } from '@/hooks/useSubscribe';
 
 interface MessagesProps {
+  chatId: string;
   initialMessages: Message[];
   sessionId: string;
   sessionImg?: string | null;
@@ -13,6 +15,7 @@ interface MessagesProps {
 }
 
 const Messages: FC<MessagesProps> = ({
+  chatId,
   initialMessages,
   sessionId,
   sessionImg,
@@ -23,6 +26,14 @@ const Messages: FC<MessagesProps> = ({
   function formatTimestamp(timestamp: number) {
     return format(timestamp, 'HH:MM');
   }
+  useSubscribeMessageRequest({
+    chatId: chatId,
+    callback: (message) => {
+      console.log({ message });
+      setMessages((prev) => [message, ...prev]);
+    },
+  });
+
   return (
     <div
       id="messages"

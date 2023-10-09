@@ -1,6 +1,8 @@
 import { fetchRedis } from '@/helpers/redis';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
+import { pusherServer } from '@/lib/pusher';
+import { toPusherKey } from '@/lib/utils';
 import { emailValidator } from '@/lib/validations';
 import { AxiosError } from 'axios';
 import { getServerSession } from 'next-auth';
@@ -19,7 +21,7 @@ export async function POST(req: Request, res: Response) {
           Authorization: `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,
         },
         cache: 'no-store',
-      }
+      },
     );
 
     const data = (await RESTResponse.json()) as { result: string };
@@ -45,7 +47,7 @@ export async function POST(req: Request, res: Response) {
     const isAlreadyAdded = (await fetchRedis(
       'sismember',
       `user:${idToAdd}:incoming_friend_requests`,
-      session.user.id
+      session.user.id,
     )) as 0 | 1;
 
     if (isAlreadyAdded) {
@@ -56,12 +58,22 @@ export async function POST(req: Request, res: Response) {
     const isAlreadyFriends = (await fetchRedis(
       'sismember',
       `user:${session.user.id}:friends`,
-      idToAdd
+      idToAdd,
     )) as 0 | 1;
 
     if (isAlreadyFriends) {
       return new Response('You two are already friends', { status: 400 });
     }
+
+    // trigger pusher event
+    pusherServer.trigger(
+      toPusherKey(`user:${idToAdd}:incoming_friend_requests`),
+      'incoming_friend_requests',
+      {
+        senderId: session.user.id,
+        senderEmail: session.user.email,
+      },
+    );
 
     // valid request, send friend request
     db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
