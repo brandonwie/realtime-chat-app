@@ -1,5 +1,5 @@
 import FriendRequestSidebarOptions from '@/components/FriendRequestSidebarOptions';
-import { Icon, Icons } from '@/components/Icons';
+import { Icons } from '@/components/Icons';
 import MobileChatLayout from '@/components/MobileChatLayout';
 import SidebarChatList from '@/components/SidebarChatList';
 import SignOutButton from '@/components/SignOutButton';
