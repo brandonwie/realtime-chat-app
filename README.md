@@ -25,3 +25,4 @@ npx create-next-app@latest
 - [zod](https://github.com/colinhacks/zod)
 - [axios](https://github.com/axios/axios)
 - [react-textarea-autosize](https://www.npmjs.com/package/react-textarea-autosize)
+- [Pusher](https://pusher.com/)
