@@ -4,11 +4,12 @@
 
 ## Features
 
-![Google Login](public/login.jpg)
-![Home](public/main.jpg)
-![Add Friend](public/add-friend.gif)
-![ChatNotification](public/chat-notification.gif)
-![Chat](public/chat.gif)
+- realtime notifications and chat
+  ![Google Login](public/login.jpg)
+  ![Home](public/main.jpg)
+  ![Add Friend](public/add-friend.gif)
+  ![ChatNotification](public/chat-notification.gif)
+  ![Chat](public/chat.gif)
 
 ## Boilerplate
 
