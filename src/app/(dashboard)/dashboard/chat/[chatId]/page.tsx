@@ -1,3 +1,4 @@
+import ChatInput from '@/components/ChatInput';
 import Messages from '@/components/Messages';
 import { fetchRedis } from '@/helpers/redis';
 import { authOptions } from '@/lib/auth';
@@ -18,12 +19,14 @@ async function getChatMessages(chatId: string) {
   try {
     const results: string[] = await fetchRedis(
       'zrange',
-      `chat:${chatId}`,
+      `chat:${chatId}:messages`,
       0,
       -1,
     );
     const dbMessages = results.map((message) => JSON.parse(message) as Message);
+
     const reverseMessages = dbMessages.reverse();
+
     const messages = messageArrayValidator.parse(reverseMessages);
 
     return messages;
@@ -47,9 +50,10 @@ const Chat: FC<ChatProps> = async ({ params }) => {
   const chatPartnerId = user.id === userId1 ? userId2 : userId1;
   const chatPartner = (await db.get(`user:${chatPartnerId}`)) as User;
   const initialMessages = await getChatMessages(chatId);
+  console.log(initialMessages);
 
   return (
-    <div className="flex-1 justify-between flex flex-col h-full max-h-[calc(100vh - 6rem)]">
+    <div className="flex-1 justify-between flex flex-col h-full max-h-[calc(100vh-6rem)]">
       <div className="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
         <div className="relative flex items-center space-x-4">
           {/* chat parter image */}
@@ -77,7 +81,13 @@ const Chat: FC<ChatProps> = async ({ params }) => {
         </div>
       </div>
       {/* chat */}
-      <Messages initialMessages={initialMessages} />
+      <Messages
+        initialMessages={initialMessages}
+        sessionId={session.user.id}
+        sessionImg={session.user.image}
+        chatPartner={chatPartner}
+      />
+      <ChatInput chatPartner={chatPartner} chatId={chatId} />
     </div>
   );
 };

@@ -24,3 +24,4 @@ npx create-next-app@latest
 - [@hookform/resolvers](https://github.com/react-hook-form/resolvers)
 - [zod](https://github.com/colinhacks/zod)
 - [axios](https://github.com/axios/axios)
+- [react-textarea-autosize](https://www.npmjs.com/package/react-textarea-autosize)
