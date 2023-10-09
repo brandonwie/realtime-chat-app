@@ -4,8 +4,8 @@
 
 ## Features
 
-![Google Login]()
-![Home](public/main.png)
+![Google Login](public/login.jpg)
+![Home](public/main.jpg)
 ![Add Friend](public/add-friend.gif)
 ![ChatNotification](public/chat-notification.gif)
 ![Chat](public/chat.gif)
